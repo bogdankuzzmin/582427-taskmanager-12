@@ -1,8 +1,8 @@
 export const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 
-export const INSERT_POSITION = {
-  beforebegin: `beforebegin`,
-  afterbegin: `afterbegin`,
-  beforeend: `beforeend`,
-  afterend: `afterend`,
+export const insertPosition = {
+  BEFOREBEGIN: `beforebegin`,
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
 };

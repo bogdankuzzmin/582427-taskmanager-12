@@ -1,5 +1,5 @@
 import {render} from "./utils.js";
-import {INSERT_POSITION} from "./const.js";
+import {insertPosition} from "./const.js";
 
 import SiteMenuView from "./view/site-menu.js";
 import FilterView from "./view/filter.js";
@@ -43,18 +43,18 @@ const renderTask = (taskListElement, task) => {
     replaceFormToCard();
   });
 
-  render(taskListElement, taskComponent.element, INSERT_POSITION.beforeend);
+  render(taskListElement, taskComponent.element, insertPosition.BEFOREEND);
 };
 
-render(siteHeaderElement, new SiteMenuView().element, INSERT_POSITION.beforeend);
-render(siteMainElement, new FilterView(filters).element, INSERT_POSITION.beforeend);
+render(siteHeaderElement, new SiteMenuView().element, insertPosition.BEFOREEND);
+render(siteMainElement, new FilterView(filters).element, insertPosition.BEFOREEND);
 
 const boardComponent = new BoardView();
-render(siteMainElement, boardComponent.element, INSERT_POSITION.beforeend);
-render(boardComponent.element, new SortView().element, INSERT_POSITION.afterbegin);
+render(siteMainElement, boardComponent.element, insertPosition.BEFOREEND);
+render(boardComponent.element, new SortView().element, insertPosition.AFTERBEGIN);
 
 const taskListComponent = new TaskListView();
-render(boardComponent.element, taskListComponent.element, INSERT_POSITION.beforeend);
+render(boardComponent.element, taskListComponent.element, insertPosition.BEFOREEND);
 
 for (let i = 0; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i++) {
   renderTask(taskListComponent.element, tasks[i]);
@@ -64,7 +64,7 @@ if (tasks.length > TASK_COUNT_PER_STEP) {
   let renderTemplateedTaskCount = TASK_COUNT_PER_STEP;
 
   const loadMoreButtonComponent = new LoadMoreButtonView();
-  render(boardComponent.element, loadMoreButtonComponent.element, INSERT_POSITION.beforeend);
+  render(boardComponent.element, loadMoreButtonComponent.element, insertPosition.BEFOREEND);
 
   loadMoreButtonComponent.element.addEventListener(`click`, (evt) => {
     evt.preventDefault();

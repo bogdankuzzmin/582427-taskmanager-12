@@ -1,11 +1,11 @@
-import {INSERT_POSITION} from "./const.js";
+import {insertPosition} from "./const.js";
 
 export const render = (container, element, place) => {
   switch (place) {
-    case INSERT_POSITION.afterbegin:
+    case insertPosition.AFTERBEGIN:
       container.prepend(element);
       break;
-    case INSERT_POSITION.beforeend:
+    case insertPosition.BEFOREEND:
       container.append(element);
       break;
   }
