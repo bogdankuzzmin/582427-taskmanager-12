@@ -1,6 +1,6 @@
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../utils.js";
 
-export const createTaskTemplate = (task) => {
+const createTaskTemplate = (task) => {
   const {color, description, repeating, isArchive, isFavorite, dueDate} = task;
 
   const date = dueDate !== null
@@ -69,3 +69,26 @@ export const createTaskTemplate = (task) => {
   </article>`
   );
 };
+
+export default class Task {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  get template() {
+    return createTaskTemplate(this._task);
+  }
+
+  get element() {
+    if (!this._element) {
+      this._element = createElement(this.template);
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
