@@ -1,4 +1,4 @@
-import {render} from "./utils.js";
+import {render, replace, remove} from "./utils/render.js";
 import {InsertPosition} from "./const.js";
 
 import SiteMenuView from "./view/site-menu.js";
@@ -28,11 +28,11 @@ const renderTask = (taskListElement, task) => {
   const taskEditComponent = new TaskEditView(task);
 
   const replaceCardToForm = () => {
-    taskListElement.replaceChild(taskEditComponent.element, taskComponent.element);
+    replace(taskEditComponent, taskComponent);
   };
 
   const replaceFormToCard = () => {
-    taskListElement.replaceChild(taskComponent.element, taskEditComponent.element);
+    replace(taskComponent, taskEditComponent);
   };
 
   const escKeyDownHandler = (evt) => {
@@ -55,22 +55,22 @@ const renderTask = (taskListElement, task) => {
     document.removeEventListener(`keydown`, escKeyDownHandler);
   });
 
-  render(taskListElement, taskComponent.element, InsertPosition.BEFOREEND);
+  render(taskListElement, taskComponent, InsertPosition.BEFOREEND);
 };
 
 const renderBoard = (boardContainer, boardTasks) => {
   const boardComponent = new BoardView();
   const taskListComponent = new TaskListView();
 
-  render(boardContainer, boardComponent.element, InsertPosition.BEFOREEND);
-  render(boardComponent.element, taskListComponent.element, InsertPosition.BEFOREEND);
+  render(boardContainer, boardComponent, InsertPosition.BEFOREEND);
+  render(boardComponent, taskListComponent, InsertPosition.BEFOREEND);
 
   if (boardTasks.every((task) => task.isArchive)) {
-    render(boardComponent.element, new NoTaskView().element, InsertPosition.AFTERBEGIN);
+    render(boardComponent, new NoTaskView(), InsertPosition.AFTERBEGIN);
     return;
   }
 
-  render(boardComponent.element, new SortView().element, InsertPosition.AFTERBEGIN);
+  render(boardComponent, new SortView(), InsertPosition.AFTERBEGIN);
 
   boardTasks
   .slice(0, Math.min(tasks.length, TASK_COUNT_PER_STEP))
@@ -80,7 +80,7 @@ const renderBoard = (boardContainer, boardTasks) => {
     let renderTemplateedTaskCount = TASK_COUNT_PER_STEP;
 
     const loadMoreButtonComponent = new LoadMoreButtonView();
-    render(boardComponent.element, loadMoreButtonComponent.element, InsertPosition.BEFOREEND);
+    render(boardComponent, loadMoreButtonComponent, InsertPosition.BEFOREEND);
 
     loadMoreButtonComponent.setClickHandler(() => {
       boardTasks
@@ -90,14 +90,13 @@ const renderBoard = (boardContainer, boardTasks) => {
       renderTemplateedTaskCount += TASK_COUNT_PER_STEP;
 
       if (renderTemplateedTaskCount >= boardTasks.length) {
-        loadMoreButtonComponent.element.remove();
-        loadMoreButtonComponent.removeElement();
+        remove(loadMoreButtonComponent);
       }
     });
   }
 };
 
-render(siteHeaderElement, new SiteMenuView().element, InsertPosition.BEFOREEND);
-render(siteMainElement, new FilterView(filters).element, InsertPosition.BEFOREEND);
+render(siteHeaderElement, new SiteMenuView(), InsertPosition.BEFOREEND);
+render(siteMainElement, new FilterView(filters), InsertPosition.BEFOREEND);
 
 renderBoard(siteMainElement, tasks);
