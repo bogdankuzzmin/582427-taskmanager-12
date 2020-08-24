@@ -1,3 +1,4 @@
+import {nanoid} from "nanoid";
 import {COLORS} from "../const.js";
 import {getRandomInteger} from "../utils/common.js";
 
@@ -63,6 +64,7 @@ export const generateTask = () => {
     };
 
   return {
+    id: nanoid(4),
     description: generateDescription(),
     dueDate,
     repeating,
