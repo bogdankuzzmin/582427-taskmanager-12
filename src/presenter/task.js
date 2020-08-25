@@ -3,13 +3,20 @@ import TaskEditView from "../view/task-edit.js";
 import {render, replace, remove} from "../utils/render.js";
 import {InsertPosition} from "../const.js";
 
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
 export default class Task {
-  constructor(taskListContainer, changeData) {
+  constructor(taskListContainer, changeData, changeMode) {
     this._taskListContainer = taskListContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._taskComponent = null;
     this._taskEditComponent = null;
+    this._mode = Mode.DEFAULT;
 
 
     this._handleEditClick = this._handleEditClick.bind(this);
@@ -38,11 +45,11 @@ export default class Task {
       return;
     }
 
-    if (this._taskListContainer.element.contains(prevTaskComponent.element)) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._taskComponent, prevTaskComponent);
     }
 
-    if (this._taskListContainer.element.contains(prevTaskEditComponent.element)) {
+    if (this._mode === Mode.EDITING) {
       replace(this._taskEditComponent, prevTaskEditComponent);
     }
 
@@ -55,19 +62,29 @@ export default class Task {
     remove(this._taskEditComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToCard();
+    }
+  }
+
   _replaceCardtoForm() {
     replace(this._taskEditComponent, this._taskComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
   _replaceFormToCard() {
     replace(this._taskComponent, this._taskEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
+      this._taskEditComponent.reset(this._task);
       this._replaceFormToCard();
     }
   }
