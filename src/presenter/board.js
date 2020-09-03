@@ -12,7 +12,8 @@ import TaskPresenter from "./task.js";
 const TASK_COUNT_PER_STEP = 8;
 
 export default class Board {
-  constructor(boardContainer) {
+  constructor(boardContainer, tasksModel) {
+    this._tasksModel = tasksModel;
     this._boardContainer = boardContainer;
     this._renderedTaskCount = TASK_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
@@ -38,6 +39,10 @@ export default class Board {
     render(this._boardComponent, this._taskListComponent, InsertPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _getTasks() {
+    return this._tasksModel.getTasks();
   }
 
   _handleModeChange() {
