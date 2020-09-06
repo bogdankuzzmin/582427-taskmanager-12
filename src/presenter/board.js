@@ -59,7 +59,7 @@ export default class Board {
   }
 
   _handleViewAction(actionType, updateType, update) {
-    console.log(actionType, updateType, update);
+    // console.log(actionType, updateType, update);
     switch (actionType) {
       case UserAction.UPDATE_TASK:
         this._tasksModel.updateTask(updateType, update);
@@ -74,7 +74,7 @@ export default class Board {
   }
 
   _handleModelEvent(updateType, data) {
-    console.log(updateType, data);
+    // console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         this._taskPresenter[data.id].init(data);
