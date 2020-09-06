@@ -1,9 +1,9 @@
 import SmartView from "./smart.js";
 import {COLORS} from "../const.js";
 import {isTaskRepeating, formatTaskDueDate} from "../utils/task.js";
+import he from "he";
 
 import flatpickr from "flatpickr";
-
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_TASK = {
@@ -108,7 +108,7 @@ const createTaskEditTemplate = (data) => {
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >${description}</textarea>
+            >${he.encode(description)}</textarea>
           </label>
         </div>
 
