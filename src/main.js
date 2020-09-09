@@ -1,4 +1,4 @@
-import {InsertPosition} from "./const.js";
+import {InsertPosition, MenuItem} from "./const.js";
 import {render} from "./utils/render.js";
 
 import SiteMenuView from "./view/site-menu.js";
@@ -23,11 +23,33 @@ const filterModel = new FilterModel();
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+const siteMenuComponent = new SiteMenuView();
 
-render(siteHeaderElement, new SiteMenuView(), InsertPosition.BEFOREEND);
+render(siteHeaderElement, siteMenuComponent, InsertPosition.BEFOREEND);
 
 const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.ADD_NEW_TASK:
+      // Скрыть статистику
+      // Показать доску
+      // Показать форму добавления новой задачи
+      // Убрать выделение с ADD NEW TASK после сохранения
+      break;
+    case MenuItem.TASKS:
+      // Показать доску
+      // Скрыть статистику
+      break;
+    case MenuItem.STATISTICS:
+      // Скрыть доску
+      // Показать статистику
+      break;
+  }
+};
+
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 boardPresenter.init();
