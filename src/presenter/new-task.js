@@ -9,6 +9,7 @@ export default class NewTask {
     this._changeData = changeData;
 
     this._taskEditComponent = null;
+    this._destroyCallback = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
@@ -16,7 +17,9 @@ export default class NewTask {
 
   }
 
-  init() {
+  init(callback) {
+    this._destroyCallback = callback;
+
     if (this._taskEditComponent !== null) {
       return;
     }
@@ -33,6 +36,13 @@ export default class NewTask {
   destroy() {
     if (this._taskEditComponent === null) {
       return;
+    }
+
+    remove(this._taskEditComponent);
+    this._taskEditComponent = null;
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._taskEditComponent);

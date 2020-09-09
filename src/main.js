@@ -1,4 +1,4 @@
-import {InsertPosition, MenuItem} from "./const.js";
+import {InsertPosition, MenuItem, UpdateType, FilterType} from "./const.js";
 import {render} from "./utils/render.js";
 
 import SiteMenuView from "./view/site-menu.js";
@@ -30,6 +30,11 @@ render(siteHeaderElement, siteMenuComponent, InsertPosition.BEFOREEND);
 const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
 
+const handleTaskNewFormClose = () => {
+  siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = false;
+  siteMenuComponent.setMenuItem(MenuItem.TASKS);
+};
+
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_TASK:
@@ -37,14 +42,21 @@ const handleSiteMenuClick = (menuItem) => {
       // Показать доску
       // Показать форму добавления новой задачи
       // Убрать выделение с ADD NEW TASK после сохранения
+      boardPresenter.destroy();
+      filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+      boardPresenter.init();
+      boardPresenter.createTask(handleTaskNewFormClose);
+      siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = true;
       break;
     case MenuItem.TASKS:
       // Показать доску
       // Скрыть статистику
+      boardPresenter.init();
       break;
     case MenuItem.STATISTICS:
       // Скрыть доску
       // Показать статистику
+      boardPresenter.destroy();
       break;
   }
 };
@@ -54,7 +66,3 @@ siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 filterPresenter.init();
 boardPresenter.init();
 
-document.querySelector(`#control__new-task`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  boardPresenter.createTask();
-});
