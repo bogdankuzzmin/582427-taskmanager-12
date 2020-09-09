@@ -2,6 +2,7 @@ import {InsertPosition, MenuItem, UpdateType, FilterType} from "./const.js";
 import {render} from "./utils/render.js";
 
 import SiteMenuView from "./view/site-menu.js";
+import StatisticsView from "./view/statistics.js";
 
 import BoardPresenter from "./presenter/board.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -64,5 +65,6 @@ const handleSiteMenuClick = (menuItem) => {
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
-boardPresenter.init();
+// boardPresenter.init();
+render(siteMainElement, new StatisticsView(tasksModel.getTasks()), InsertPosition.BEFOREEND);
 
