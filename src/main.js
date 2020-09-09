@@ -1,7 +1,8 @@
-import {InsertPosition} from "./const.js";
-import {render} from "./utils/render.js";
+import {InsertPosition, MenuItem, UpdateType, FilterType} from "./const.js";
+import {render, remove} from "./utils/render.js";
 
 import SiteMenuView from "./view/site-menu.js";
+import StatisticsView from "./view/statistics.js";
 
 import BoardPresenter from "./presenter/board.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -23,16 +24,52 @@ const filterModel = new FilterModel();
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+const siteMenuComponent = new SiteMenuView();
 
-render(siteHeaderElement, new SiteMenuView(), InsertPosition.BEFOREEND);
+render(siteHeaderElement, siteMenuComponent, InsertPosition.BEFOREEND);
 
 const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
 
+const handleTaskNewFormClose = () => {
+  siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = false;
+  siteMenuComponent.setMenuItem(MenuItem.TASKS);
+};
+
+let statisticsComponent = null;
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.ADD_NEW_TASK:
+      remove(statisticsComponent);
+      // Скрыть статистику
+      // Показать доску
+      // Показать форму добавления новой задачи
+      // Убрать выделение с ADD NEW TASK после сохранения
+      boardPresenter.destroy();
+      filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+      boardPresenter.init();
+      boardPresenter.createTask(handleTaskNewFormClose);
+      siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = true;
+      break;
+    case MenuItem.TASKS:
+      remove(statisticsComponent);
+      // Показать доску
+      // Скрыть статистику
+      boardPresenter.init();
+      break;
+    case MenuItem.STATISTICS:
+      // Скрыть доску
+      // Показать статистику
+      boardPresenter.destroy();
+      statisticsComponent = new StatisticsView(tasksModel.getTasks());
+      render(siteMainElement, statisticsComponent, InsertPosition.BEFOREEND);
+      break;
+  }
+};
+
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+
 filterPresenter.init();
 boardPresenter.init();
 
-document.querySelector(`#control__new-task`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  boardPresenter.createTask();
-});
