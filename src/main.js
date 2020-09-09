@@ -1,5 +1,5 @@
 import {InsertPosition, MenuItem, UpdateType, FilterType} from "./const.js";
-import {render} from "./utils/render.js";
+import {render, remove} from "./utils/render.js";
 
 import SiteMenuView from "./view/site-menu.js";
 import StatisticsView from "./view/statistics.js";
@@ -36,9 +36,12 @@ const handleTaskNewFormClose = () => {
   siteMenuComponent.setMenuItem(MenuItem.TASKS);
 };
 
+let statisticsComponent = null;
+
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_TASK:
+      remove(statisticsComponent);
       // Скрыть статистику
       // Показать доску
       // Показать форму добавления новой задачи
@@ -50,6 +53,7 @@ const handleSiteMenuClick = (menuItem) => {
       siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = true;
       break;
     case MenuItem.TASKS:
+      remove(statisticsComponent);
       // Показать доску
       // Скрыть статистику
       boardPresenter.init();
@@ -58,6 +62,8 @@ const handleSiteMenuClick = (menuItem) => {
       // Скрыть доску
       // Показать статистику
       boardPresenter.destroy();
+      statisticsComponent = new StatisticsView(tasksModel.getTasks());
+      render(siteMainElement, statisticsComponent, InsertPosition.BEFOREEND);
       break;
   }
 };
@@ -65,6 +71,5 @@ const handleSiteMenuClick = (menuItem) => {
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
-// boardPresenter.init();
-render(siteMainElement, new StatisticsView(tasksModel.getTasks()), InsertPosition.BEFOREEND);
+boardPresenter.init();
 

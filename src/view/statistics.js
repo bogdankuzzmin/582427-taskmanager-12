@@ -23,10 +23,10 @@ const renderColorsChart = (colorsCtx, tasks) => {
     plugins: [ChartDataLabels],
     type: `pie`,
     data: {
-      labels: uniqColors,
+      labels: uniqColors, // Сюда нужно передать названия уникальных цветов, они станут ярлыками
       datasets: [{
-        data: taskByColorCounts,
-        backgroundColor: hexColors
+        data: taskByColorCounts, // Сюда нужно передать в том же порядке количество задач по каждому цвету
+        backgroundColor: hexColors // Сюда нужно передать в том же порядке HEX каждого цвета
       }]
     },
     options: {
