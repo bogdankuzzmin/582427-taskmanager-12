@@ -11,31 +11,18 @@ import FilterPresenter from "./presenter/filter.js";
 import TasksModel from "./model/tasks.js";
 import FilterModel from "./model/filter.js";
 
-import {generateTask} from "./mock/task.js";
-
-const TASK_COUNT = 22;
 const AUTHORIZATION = `Basic hS2sd3dfSwcl1sa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/task-manager`;
 
-const tasks = new Array(TASK_COUNT).fill().map(generateTask);
-// console.log(tasks);
-const api = new Api(END_POINT, AUTHORIZATION);
-
-api.getTasks().then((tasks) => {
-  console.log(tasks);
-});
-
-const tasksModel = new TasksModel();
-tasksModel.setTasks(tasks);
-
-const filterModel = new FilterModel();
-
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+const tasksModel = new TasksModel();
+const filterModel = new FilterModel();
+
 const siteMenuComponent = new SiteMenuView();
-
-render(siteHeaderElement, siteMenuComponent, InsertPosition.BEFOREEND);
-
 const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
 
@@ -70,6 +57,15 @@ const handleSiteMenuClick = (menuItem) => {
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
+render(siteHeaderElement, siteMenuComponent, InsertPosition.BEFOREEND);
 filterPresenter.init();
 boardPresenter.init();
+
+api.getTasks()
+  .then((tasks) => {
+    tasksModel.setTasks(UpdateType.INIT, tasks);
+  })
+  .catch(() => {
+    tasksModel.setTasks(UpdateType.INIT, []);
+  });
 
