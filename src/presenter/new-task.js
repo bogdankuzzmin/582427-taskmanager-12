@@ -1,7 +1,6 @@
 import TaskEditView from "../view/task-edit.js";
 import {remove, render} from "../utils/render.js";
 import {InsertPosition, UserAction, UpdateType} from "../const.js";
-import {nanoid} from "nanoid";
 
 export default class NewTask {
   constructor(taskListContainer, changeData) {
@@ -55,7 +54,7 @@ export default class NewTask {
     this._changeData(
         UserAction.ADD_TASK,
         UpdateType.MINOR,
-        Object.assign({id: nanoid(3)}, task)
+        task,
     );
     this.destroy();
   }
