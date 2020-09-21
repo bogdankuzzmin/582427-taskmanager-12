@@ -1,6 +1,6 @@
 import {InsertPosition, MenuItem, UpdateType, FilterType} from "./const.js";
 import {render, remove} from "./utils/render.js";
-import Api from "./api.js";
+import Api from "./api/index.js";
 
 import SiteMenuView from "./view/site-menu.js";
 import StatisticsView from "./view/statistics.js";
